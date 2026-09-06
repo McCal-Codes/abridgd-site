@@ -1,0 +1,57 @@
+name: Deploy
+
+# The whole repository is the site, so every push to master deploys.
+# One-time setup: Settings → Pages → Source: "GitHub Actions".
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time. Queued runs between the in-flight one and the newest
+# are skipped, but the in-flight one is never cancelled — per GitHub's own
+# starter workflow, a production deployment should be allowed to finish.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required pages exist
+        run: |
+          set -euo pipefail
+          # The Abridgd app links to privacy.html and terms.html from its App Info
+          # screen, and Google Play requires a reachable privacy policy URL. A
+          # deploy that drops either breaks a shipped app and a store listing,
+          # not just a page.
+          for page in index.html privacy.html terms.html; do
+            if [ ! -f "$page" ]; then
+              echo "$page is missing — the app and the Play listing both link to it."
+              exit 1
+            fi
+          done
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .
+
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4
