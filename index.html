@@ -1,637 +1,302 @@
-<title>Abridgd Launch</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abridgd — News abridged to you</title>
+<meta name="description" content="A calmer way into Pittsburgh's news. No account, no trackers, no infinite scroll — just the stories worth your attention, at a reading pace you control.">
+<meta property="og:title" content="Abridgd — News abridged to you">
+<meta property="og:description" content="A calmer way into Pittsburgh's news. No account, no trackers, no infinite scroll.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abridgd.app">
+<meta property="og:image" content="https://abridgd.app/assets/icon.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="./assets/icon.png">
+<link rel="apple-touch-icon" href="./assets/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Palette lifted verbatim from the app's own darkColors in
+     src/theme/ThemeContext.tsx, so the site and the app agree rather than
+     approximating each other. */
   :root {
-    --bg: #F9F9F7;
-    --surface: #FFFFFF;
-    --surface-raised: #FFFFFF;
-    --text: #121212;
-    --text-secondary: #555555;
-    --text-tertiary: #8E8E93;
-    --border: #E0E0E0;
-    --accent: #0097A7;
-    --accent-soft: rgba(0,151,167,0.10);
-    --accent-ink: #121212;
-    --pop: #E8734A;
-    --pop-soft: rgba(232,115,74,0.12);
-    --amber: #C88A1E;
-    --amber-soft: rgba(200,138,30,0.12);
-    --shadow: 0 20px 60px -30px rgba(18,18,18,0.35);
-    --phone-bg: #0C0C0C;
-    --phone-surface: #1A1A1A;
-    --phone-text: #F5F5F7;
-    --phone-text-secondary: #B0B0B0;
-    --phone-border: #2A2A2A;
-    --phone-accent: #00BCD4;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0C0C0C;
-      --surface: #1A1A1A;
-      --surface-raised: #1F1F1F;
-      --text: #F5F5F7;
-      --text-secondary: #B0B0B0;
-      --text-tertiary: #7A7A7E;
-      --border: #2A2A2A;
-      --accent: #00BCD4;
-      --accent-soft: rgba(0,188,212,0.12);
-      --accent-ink: #06181A;
-      --shadow: 0 20px 60px -25px rgba(0,0,0,0.6);
-    }
-  }
-  :root[data-theme="dark"] {
     --bg: #0C0C0C;
     --surface: #1A1A1A;
-    --surface-raised: #1F1F1F;
+    --raised: #121212;
     --text: #F5F5F7;
-    --text-secondary: #B0B0B0;
-    --text-tertiary: #7A7A7E;
-    --border: #2A2A2A;
-    --accent: #00BCD4;
-    --accent-soft: rgba(0,188,212,0.12);
-    --accent-ink: #06181A;
-    --shadow: 0 20px 60px -25px rgba(0,0,0,0.6);
+    --text-2: #B0B0B0;
+    --text-3: #8E8E93;
+    --rule: #2A2A2A;
+    --tint: #00BCD4;
+    --accent: #B86464;
+    --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation: none !important; transition: none !important; }
+  }
+
   body {
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
 
-  /* ---------- Masthead ---------- */
-  .masthead {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 28px 0 22px;
-    border-bottom: 1px solid var(--border);
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 28px; }
+  .narrow { max-width: 720px; }
+
+  a { color: var(--tint); }
+
+  /* ---------- masthead ---------- */
+  .masthead { border-bottom: 1px solid var(--rule); }
+  .masthead .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding-top: 18px; padding-bottom: 18px;
   }
+  .brand { display: flex; align-items: center; gap: 11px; }
+  .brand img { width: 30px; height: 30px; border-radius: 7px; display: block; }
   .wordmark {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 20px;
-    letter-spacing: 0.01em;
+    font-family: var(--serif); font-weight: 700; font-size: 21px;
+    letter-spacing: -0.015em;
   }
   .masthead-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--pop);
-    background: var(--pop-soft);
-    padding: 5px 10px;
-    border-radius: 999px;
+    font-family: var(--sans); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
+    border: 1px solid var(--rule); border-radius: 999px; padding: 5px 11px;
   }
 
-  /* ---------- Hero ---------- */
-  .hero {
-    padding: 88px 0 96px;
-    display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
-    gap: 56px;
-    align-items: center;
-  }
+  /* ---------- hero ---------- */
+  .hero { padding: 84px 0 64px; }
   .eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: 0 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--tint); margin: 0 0 20px;
   }
-  .eyebrow::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: inline-block;
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(44px, 7vw, 76px); line-height: 1.03;
+    letter-spacing: -0.03em; margin: 0 0 22px;
   }
-  h1.hero-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: clamp(42px, 5.6vw, 66px);
-    line-height: 1.03;
-    letter-spacing: -0.01em;
-    margin: 0 0 26px;
-    text-wrap: balance;
-  }
-  h1.hero-title em {
-    font-style: italic;
-    font-weight: 500;
-    color: var(--accent);
-  }
+  h1 em { font-style: italic; color: var(--tint); }
   .hero-sub {
-    font-size: 19px;
-    line-height: 1.55;
-    color: var(--text-secondary);
-    max-width: 46ch;
-    margin: 0 0 34px;
-  }
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Source Sans 3', sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--accent-ink);
-    background: var(--accent);
-    padding: 13px 22px;
-    border-radius: 12px;
-    margin-bottom: 40px;
-    text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-  .hero-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px var(--accent); }
-  .hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .hero-cta-note {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted);
-    letter-spacing: 0.01em;
-  }
-  .footer-links { display: flex; gap: 8px; align-items: center; }
-  .footer-links a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
-  .footer-links a:hover { color: var(--accent); }
-  .hero-cta .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent-ink);
-    opacity: 0.9;
-  }
-  .hero-cta .arrow { opacity: 0.85; }
-  .hero-meta {
-    display: flex;
-    gap: 28px;
-    flex-wrap: wrap;
-  }
-  .stat { }
-  .stat-num {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 28px;
-    display: block;
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-top: 6px;
-    display: block;
+    font-size: 20px; line-height: 1.5; color: var(--text-2);
+    max-width: 30ch; margin: 0 0 34px;
   }
 
-  /* ---------- Phone mockups ---------- */
-  .phones {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 640px;
+  .actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--tint); color: #04252A;
+    font-family: var(--sans); font-weight: 600; font-size: 16px;
+    padding: 14px 24px; border-radius: 999px; text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
   }
-  .phone {
-    width: 260px;
-    border-radius: 34px;
-    background: var(--phone-bg);
-    border: 8px solid #050505;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    position: relative;
+  .cta:hover { transform: translateY(-1px); box-shadow: 0 12px 28px -12px var(--tint); }
+  .cta .arrow { opacity: .8; }
+  /* Secondary CTA: same shape, outlined, so neither platform reads as the
+     afterthought while both remain visibly distinct. */
+  .cta-alt {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--rule);
   }
-  .phone-a { z-index: 2; transform: rotate(-4deg); transition: transform 0.35s ease; }
-  .phone-b {
-    position: absolute;
-    left: 178px;
-    top: -64px;
-    z-index: 1;
-    transform: rotate(5deg);
-    opacity: 0.94;
-    transition: transform 0.35s ease;
-  }
-  .phones:hover .phone-a { transform: rotate(-7deg) translateY(-4px); }
-  .phones:hover .phone-b { transform: rotate(8deg) translateY(-2px); }
-  @media (prefers-reduced-motion: reduce) {
-    .phone-a, .phone-b { transition: none; }
-    .phones:hover .phone-a, .phones:hover .phone-b { transform: none; }
-  }
-  .phone-screen {
-    aspect-ratio: 375 / 812;
-    padding: 30px 16px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    font-family: 'Source Sans 3', sans-serif;
-    color: var(--phone-text);
-  }
-  .ph-eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--phone-accent);
-    font-weight: 500;
-  }
-  .ph-h1 {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 21px;
-    line-height: 1.12;
-    color: var(--phone-text);
-    margin: 2px 0 0;
-  }
-  .ph-p {
-    font-size: 11px;
-    line-height: 1.45;
-    color: var(--phone-text-secondary);
-    margin: 0;
-  }
-  .ph-card {
-    margin-top: 6px;
-    background: var(--phone-surface);
-    border: 1px solid var(--phone-border);
-    border-radius: 14px;
-    padding: 14px;
-  }
-  .ph-card-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 9px;
-  }
-  .ph-card-eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--phone-accent);
-    font-weight: 500;
-  }
-  .ph-card-meta { color: var(--phone-text-secondary); }
-  .ph-card-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 15px;
-    margin: 8px 0 8px;
-    color: var(--phone-text);
-  }
-  .ph-divider { height: 1px; background: var(--phone-border); margin-bottom: 8px; }
-  .ph-line {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-    font-size: 10.5px;
-    color: var(--phone-text);
-    padding: 4px 0;
-  }
-  .ph-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--phone-accent); margin-top: 4px; flex-shrink: 0; }
-  .ph-source { color: var(--phone-text-secondary); font-size: 9px; }
+  .cta-alt:hover { border-color: var(--tint); color: var(--tint); box-shadow: none; }
+  .cta-note { font-size: 14px; color: var(--text-3); margin: 18px 0 0; max-width: 46ch; }
+  .cta-note a { color: var(--text-2); }
 
-  .ph-articles { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
-  .ph-article-headline {
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 12.5px;
-    line-height: 1.28;
-    color: var(--phone-text);
-    margin: 0 0 4px;
+  /* ---------- stats ---------- */
+  .stats {
+    display: flex; gap: 44px; flex-wrap: wrap;
+    margin-top: 52px; padding-top: 30px; border-top: 1px solid var(--rule);
   }
-  .ph-article-meta {
-    font-size: 9px;
-    color: var(--phone-text-secondary);
-  }
+  .stat { display: flex; flex-direction: column; gap: 3px; }
+  .stat-num { font-family: var(--serif); font-size: 34px; font-weight: 600; line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--text-3); letter-spacing: .01em; }
 
-  .ph-footer { margin-top: auto; display: flex; flex-direction: column; gap: 8px; align-items: center; }
-  .ph-dots { display: flex; gap: 5px; }
-  .ph-pdot { width: 5px; height: 5px; border-radius: 50%; background: var(--phone-border); }
-  .ph-pdot.active { width: 16px; border-radius: 3px; background: var(--phone-accent); }
-  .ph-btn {
-    width: 100%;
-    text-align: center;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 9px 0;
-    border-radius: 9px;
+  /* ---------- screenshots ---------- */
+  .shots { padding: 8px 0 84px; }
+  .shot-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 26px; align-items: start;
   }
-  .ph-btn.primary { background: #F5F5F7; color: #0C0C0C; }
-  .ph-btn.ghost { background: var(--phone-surface); color: var(--phone-text-secondary); }
+  figure { margin: 0; }
+  /* 9:19.5 keeps the slot at real phone proportions, so dropping a device
+     screenshot in does not reflow the row. */
+  .shot {
+    aspect-ratio: 9 / 19.5; width: 100%;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; color: var(--text-3); font-size: 13px; text-align: center;
+    padding: 18px;
+  }
+  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  figcaption { margin-top: 12px; font-size: 14px; color: var(--text-2); }
+  figcaption b { color: var(--text); font-weight: 600; }
 
-  /* ---------- Index strip ---------- */
-  .index {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 44px 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+  /* ---------- features ---------- */
+  .band { border-top: 1px solid var(--rule); padding: 72px 0; }
+  .section-head { margin-bottom: 34px; }
+  h2 {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 4vw, 40px);
+    letter-spacing: -0.02em; margin: 0 0 10px; line-height: 1.1;
   }
-  .index-item {
-    padding: 22px 20px;
-    border-radius: 16px;
-    background: var(--surface-raised);
-    border: 1px solid var(--border);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .index-item:hover { transform: translateY(-3px); border-color: var(--item-color, var(--accent)); }
-  .index-dot {
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    background: var(--item-soft, var(--accent-soft));
-    color: var(--item-color, var(--accent));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 14px;
-  }
-  .index-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 18px;
-    margin: 0 0 6px;
-  }
-  .index-desc {
-    font-size: 13.5px;
-    line-height: 1.5;
-    color: var(--text-secondary);
-    margin: 0;
-  }
+  .section-note { color: var(--text-3); font-size: 16px; margin: 0; }
 
-  /* ---------- Changelog ---------- */
-  .section-head {
-    padding: 64px 0 8px;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 24px;
+  .features {
+    columns: 2; column-gap: 52px; margin: 0; padding: 0; list-style: none;
   }
-  h2.section-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-size: 34px;
-    margin: 0;
+  .features li {
+    break-inside: avoid; padding: 13px 0 13px 26px; position: relative;
+    border-bottom: 1px solid var(--rule); color: var(--text-2); font-size: 16px;
   }
-  .section-note {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--text-tertiary);
-    white-space: nowrap;
+  .features li::before {
+    content: ""; position: absolute; left: 0; top: 21px;
+    width: 9px; height: 9px; border-radius: 50%; background: var(--tint); opacity: .55;
   }
-  .dispatches {
-    padding: 24px 0 40px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  .dispatch {
-    padding: 24px;
-    border-radius: 18px;
-    background: var(--surface-raised);
-    border: 1px solid var(--border);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .dispatch:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-  .dispatch.wide { grid-column: 1 / -1; }
-  .kind {
-    display: inline-block;
-    margin-bottom: 12px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--tag-color, var(--accent));
-    background: var(--tag-soft, var(--accent-soft));
-    padding: 3px 8px;
-    border-radius: 4px;
-  }
-  .dispatch-title {
-    font-family: 'Fraunces', serif;
-    font-weight: 600;
-    font-style: italic;
-    font-size: 19px;
-    margin: 0 0 8px;
-    text-wrap: balance;
-  }
-  .dispatch-body {
-    font-size: 14px;
-    line-height: 1.55;
-    color: var(--text-secondary);
-    margin: 0;
-  }
-  .also-list {
-    margin: 4px 0 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 24px;
-  }
-  .also-list li {
-    font-size: 14px;
-    color: var(--text-secondary);
-    padding-left: 16px;
-    position: relative;
-  }
-  .also-list li::before {
-    content: "+";
-    position: absolute;
-    left: 0;
-    color: var(--pop);
-    font-weight: 700;
-  }
-  .also-list b { color: var(--text); font-weight: 600; }
+  .features b { color: var(--text); font-weight: 600; }
 
-  /* ---------- Footer ---------- */
+  /* ---------- promise ---------- */
+  .promise { border-left: 3px solid var(--accent); padding-left: 22px; }
+  .promise p { font-family: var(--serif); font-size: 22px; line-height: 1.45; margin: 0; }
+
+  /* ---------- footer ---------- */
   footer {
-    border-top: 1px solid var(--border);
-    padding: 36px 0 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    color: var(--text-tertiary);
+    border-top: 1px solid var(--rule); padding: 30px 0 56px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--text-3);
   }
-  footer .wordmark { font-size: 15px; }
+  .footer-links { display: flex; gap: 20px; }
+  footer a { color: var(--text-2); text-decoration: none; }
+  footer a:hover { color: var(--tint); }
 
-  @media (max-width: 880px) {
-    .hero { grid-template-columns: 1fr; padding: 56px 0 64px; }
-    .phones { min-height: 460px; margin-top: 24px; }
-    .phone { width: 200px; }
-    .phone-b { left: 132px; top: -50px; }
-    .index { grid-template-columns: 1fr; }
-    .dispatches { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 520px) {
-    .wrap { padding: 0 20px; }
-    .phones { transform: scale(0.9); transform-origin: top center; }
-    .also-list { grid-template-columns: 1fr; }
+  @media (max-width: 860px) {
+    .shot-row { grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; }
+    .features { columns: 1; }
+    .hero { padding: 60px 0 48px; }
+    .stats { gap: 30px; }
   }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-  <div class="masthead">
-    <span class="wordmark">Abridgd</span>
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <img src="./assets/icon.png" alt="" width="30" height="30">
+      <span class="wordmark">Abridgd</span>
+    </div>
     <span class="masthead-tag">Beta · v1.5.6</span>
   </div>
-</div>
+</header>
 
-<div class="wrap">
+<main>
   <section class="hero">
-    <div>
+    <div class="wrap">
       <p class="eyebrow">News, abridged to you</p>
-      <h1 class="hero-title">A calmer way<br>into <em>the news.</em></h1>
-      <p class="hero-sub">We bridge the news to you — calmly, quickly, and without being tracked. No account, no clutter, just the stories worth your attention, at a reading pace you control.</p>
-      <div class="hero-actions">
-        <a class="hero-cta" href="https://testflight.apple.com/join/W15tgNJY"><span class="dot"></span>Join the iPhone beta<span class="arrow">→</span></a>
-        <span class="hero-cta-note">Android coming soon</span>
+      <h1>A calmer way<br>into <em>the news.</em></h1>
+      <p class="hero-sub">Pittsburgh's local reporting, gathered once a day and finished when you say so.</p>
+
+      <div class="actions">
+        <a class="cta" href="https://testflight.apple.com/join/W15tgNJY">Join the iPhone beta<span class="arrow">→</span></a>
+        <a class="cta cta-alt" href="https://github.com/McCal-Codes/abridgd/releases/latest">Download for Android<span class="arrow">→</span></a>
       </div>
-      <div class="hero-meta">
+      <p class="cta-note">iPhone builds go through TestFlight. The Android build is an APK you install yourself — <a href="#sideload">here is how</a>.</p>
+
+      <div class="stats">
         <div class="stat"><span class="stat-num">0</span><span class="stat-label">Accounts required</span></div>
+        <div class="stat"><span class="stat-num">0</span><span class="stat-label">Trackers or ads</span></div>
         <div class="stat"><span class="stat-num">1</span><span class="stat-label">Word at a time, if you want</span></div>
-        <div class="stat"><span class="stat-num">0</span><span class="stat-label">Ad trackers</span></div>
-      </div>
-    </div>
-
-    <div class="phones">
-      <div class="phone phone-b">
-        <div class="phone-screen">
-          <div class="ph-eyebrow">Morning Brief</div>
-          <p class="ph-h1" style="font-size:17px;">Today's Brief</p>
-          <p class="ph-p">Start here, read what matters, then be done.</p>
-          <div class="ph-articles">
-            <div>
-              <p class="ph-article-headline">Acrisure Stadium ranks No. 6 by fans in new study</p>
-              <p class="ph-article-meta">WPXI · 8/23</p>
-            </div>
-            <div>
-              <p class="ph-article-headline">Drier Sunday marks start of big cool down</p>
-              <p class="ph-article-meta">WPXI · 8/23</p>
-            </div>
-            <div>
-              <p class="ph-article-headline">Annual banana split festival celebrates Latrobe's sweetest invention</p>
-              <p class="ph-article-meta">WPXI · 8/22</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="phone phone-a">
-        <div class="phone-screen">
-          <div class="ph-eyebrow">Welcome</div>
-          <p class="ph-h1">A calmer way into the news</p>
-          <p class="ph-p">Start with a short brief. Keep reading when you want more. No need to build the whole app in your head on day one.</p>
-          <div class="ph-card">
-            <div class="ph-card-row">
-              <span class="ph-card-eyebrow">Morning Brief</span>
-              <span class="ph-card-meta">Updated 8:15 AM</span>
-            </div>
-            <p class="ph-card-title">Today at a glance</p>
-            <div class="ph-divider"></div>
-            <div class="ph-line"><span class="ph-dot"></span>Top story, short summary</div>
-            <div class="ph-line"><span class="ph-dot"></span>Local updates</div>
-            <div class="ph-line"><span class="ph-dot"></span>Continue reading</div>
-          </div>
-          <div class="ph-footer">
-            <div class="ph-dots">
-              <span class="ph-pdot active"></span><span class="ph-pdot"></span><span class="ph-pdot"></span><span class="ph-pdot"></span><span class="ph-pdot"></span>
-            </div>
-            <div class="ph-btn primary">Next</div>
-            <div class="ph-btn ghost">Skip for now</div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
-</div>
 
-<div class="wrap">
-  <section class="index">
-    <div class="index-item" style="--item-color: var(--accent); --item-soft: var(--accent-soft);">
-      <div class="index-dot">AM</div>
-      <h3 class="index-title">Morning Brief</h3>
-      <p class="index-desc">A finite catch-up on the stories worth your attention — not an endless scroll.</p>
-    </div>
-    <div class="index-item" style="--item-color: var(--pop); --item-soft: var(--pop-soft);">
-      <div class="index-dot">1×</div>
-      <h3 class="index-title">RSVP Reader</h3>
-      <p class="index-desc">One word at a time, locked in place. Calm, focused reading at your pace.</p>
-    </div>
-    <div class="index-item" style="--item-color: var(--amber); --item-soft: var(--amber-soft);">
-      <div class="index-dot">◡</div>
-      <h3 class="index-title">Grounding</h3>
-      <p class="index-desc">An optional breathing cue before heavy stories. Skip it, or tune it in Settings.</p>
+  <section class="shots">
+    <div class="wrap">
+      <div class="shot-row">
+        <!-- Drop a real screenshot in as <img src="./assets/shot-brief.png" alt="…">
+             The slot is already at phone proportions, so nothing reflows. -->
+        <figure>
+          <div class="shot">assets/shot-brief.png</div>
+          <figcaption><b>Morning Brief.</b> Everything worth reading, in one pass.</figcaption>
+        </figure>
+        <figure>
+          <div class="shot">assets/shot-reader.png</div>
+          <figcaption><b>Reader.</b> One word at a time, at your pace — or the whole article, plainly.</figcaption>
+        </figure>
+        <figure>
+          <div class="shot">assets/shot-saved.png</div>
+          <figcaption><b>Saved.</b> Keep what matters. Find it later.</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
-</div>
 
-<div class="wrap">
-  <div class="section-head">
-    <h2 class="section-title">What's new</h2>
-    <span class="section-note">Latest build</span>
-  </div>
-
-  <div class="dispatches">
-    <article class="dispatch" style="--tag-color: var(--pop); --tag-soft: var(--pop-soft);">
-      <span class="kind">Typeface</span>
-      <h3 class="dispatch-title">Headlines got a personality</h3>
-      <p class="dispatch-body">Every headline in the app now sets in Fraunces instead of quietly falling back to the system font. Bold means bold, too.</p>
-    </article>
-
-    <article class="dispatch" style="--tag-color: var(--accent); --tag-soft: var(--accent-soft);">
-      <span class="kind">Fixed</span>
-      <h3 class="dispatch-title">"Next" now means next</h3>
-      <p class="dispatch-body">Onboarding could get stuck on slide one no matter how many times you tapped Next. It scrolls all the way through now.</p>
-    </article>
-
-    <article class="dispatch" style="--tag-color: var(--amber); --tag-soft: var(--amber-soft);">
-      <span class="kind">Fixed</span>
-      <h3 class="dispatch-title">No more déjà vu crash</h3>
-      <p class="dispatch-body">A rare loop between profile and saved-articles state could freeze the app on first run. Found it, killed it.</p>
-    </article>
-
-    <article class="dispatch" style="--tag-color: var(--accent); --tag-soft: var(--accent-soft);">
-      <span class="kind">Changed</span>
-      <h3 class="dispatch-title">Home got calmer</h3>
-      <p class="dispatch-body">A finite Morning Brief replaces the old open-ended feed — loads instantly from cache, refreshes quietly in the background.</p>
-    </article>
-
-    <article class="dispatch" style="--tag-color: var(--pop); --tag-soft: var(--pop-soft);">
-      <span class="kind">Changed</span>
-      <h3 class="dispatch-title">Feeds got tougher</h3>
-      <p class="dispatch-body">Rebuilt RSS fetching so one broken source can't blank a whole category anymore — everything else keeps its last-known-good stories.</p>
-    </article>
-
-    <article class="dispatch wide">
-      <span class="kind">Also in this build</span>
-      <ul class="also-list">
-        <li><b>Why this story?</b> — a trust panel on every article: source, category, and why it's in your feed</li>
-        <li><b>Real account deletion</b> — wipe your profile's saved articles and progress, on-device</li>
-        <li><b>VoiceOver support</b> — the tab bar announces itself correctly to screen readers</li>
-        <li><b>Reduce Motion</b> — every animation, including the grounding breathing cue, respects it</li>
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What's in it</h2>
+        <p class="section-note">No upsell tier. Everything below is just the app.</p>
+      </div>
+      <ul class="features">
+        <li><b>Local sources.</b> Post-Gazette, TribLive, WESA, PublicSource, City Paper and more.</li>
+        <li><b>A finite feed.</b> You reach the end. There is nothing after it.</li>
+        <li><b>Speed reader.</b> One word at a time, held still, at a pace you set.</li>
+        <li><b>Read plainly.</b> Or don't use the reader at all. Articles work the normal way.</li>
+        <li><b>Grounding.</b> An optional breath before heavy stories. Off by default.</li>
+        <li><b>Content notes.</b> Know what a story holds before you open it.</li>
+        <li><b>Save for later.</b> Articles stay on your device, not on a server.</li>
+        <li><b>Continue reading.</b> Picks up exactly where you stopped.</li>
+        <li><b>Choose your sources.</b> Turn any outlet off. The feed is yours.</li>
+        <li><b>Daily digest.</b> A short catch-up on what you missed.</li>
+        <li><b>Adjustable everything.</b> Type size, spacing, motion, haptics.</li>
+        <li><b>Works offline.</b> Anything already fetched stays readable.</li>
       </ul>
-    </article>
-  </div>
-</div>
+    </div>
+  </section>
+
+  <section class="band" id="sideload">
+    <div class="wrap narrow">
+      <div class="section-head">
+        <h2>Installing on Android</h2>
+        <p class="section-note">Abridgd is not on Google Play yet, so the Android build is a file you install directly.</p>
+      </div>
+      <ul class="features" style="columns:1">
+        <li><b>Download the APK</b> from the latest release on GitHub, on the phone itself.</li>
+        <li><b>Open it.</b> Android will ask whether to allow installing apps from your browser — this is the standard prompt for anything not from the Play Store.</li>
+        <li><b>Allow it, then install.</b> Updates mean downloading the newer APK the same way.</li>
+      </ul>
+      <p class="section-note" style="margin-top:22px">Requires Android 7.0 or newer. Play Store release is in progress.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap narrow">
+      <div class="promise">
+        <p>No account. No advertising. No analytics watching how you read. Your saved articles and your reading history live on your phone and nowhere else.</p>
+      </div>
+    </div>
+  </section>
+</main>
 
 <div class="wrap">
   <footer>
-    <span class="wordmark">Abridgd</span>
+    <span>Abridgd — News abridged to you. Made in Pittsburgh.</span>
     <span class="footer-links">
       <a href="./privacy.html">Privacy</a>
-      <span aria-hidden="true">·</span>
       <a href="./terms.html">Terms</a>
+      <a href="mailto:contact@mcc-cal.com">Contact</a>
     </span>
   </footer>
 </div>
+
+</body>
+</html>
