@@ -129,16 +129,14 @@
     gap: 26px; align-items: start;
   }
   figure { margin: 0; }
-  /* 9:19.5 keeps the slot at real phone proportions, so dropping a device
-     screenshot in does not reflow the row. */
+  /* Matches the cropped device screenshots (600x881), so nothing is cut off. */
   .shot {
-    aspect-ratio: 9 / 19.5; width: 100%;
+    aspect-ratio: 600 / 881; width: 100%;
     background: var(--surface); border: 1px solid var(--rule); border-radius: 22px;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; color: var(--text-3); font-size: 13px; text-align: center;
-    padding: 18px;
   }
-  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .shot img { width: 100%; height: 100%; object-fit: contain; display: block; }
   figcaption { margin-top: 12px; font-size: 14px; color: var(--text-2); }
   figcaption b { color: var(--text); font-weight: 600; }
 
@@ -194,7 +192,7 @@
       <img src="./assets/icon.png" alt="" width="30" height="30">
       <span class="wordmark">Abridgd</span>
     </div>
-    <span class="masthead-tag">Beta · v1.5.6</span>
+    <span class="masthead-tag">Beta · 0.2.0 beta 2</span>
   </div>
 </header>
 
@@ -207,7 +205,7 @@
 
       <div class="actions">
         <a class="cta" href="https://testflight.apple.com/join/W15tgNJY">Join the iPhone beta<span class="arrow">→</span></a>
-        <a class="cta cta-alt" href="https://github.com/McCal-Codes/abridgd/releases/latest">Download for Android<span class="arrow">→</span></a>
+        <a class="cta cta-alt" href="https://github.com/McCal-Codes/abridgd/releases/tag/v0.2.0-beta.2">Download for Android<span class="arrow">→</span></a>
       </div>
       <p class="cta-note">iPhone builds go through TestFlight. The Android build is an APK you install yourself — <a href="#sideload">here is how</a>.</p>
 
@@ -222,19 +220,17 @@
   <section class="shots">
     <div class="wrap">
       <div class="shot-row">
-        <!-- Drop a real screenshot in as <img src="./assets/shot-brief.png" alt="…">
-             The slot is already at phone proportions, so nothing reflows. -->
         <figure>
-          <div class="shot">assets/shot-brief.png</div>
+          <div class="shot"><img src="./assets/shot-brief.webp" alt="Abridgd Morning Brief with a This week events card and Today's Brief" width="600" height="881" loading="lazy"></div>
           <figcaption><b>Morning Brief.</b> Everything worth reading, in one pass.</figcaption>
         </figure>
         <figure>
-          <div class="shot">assets/shot-reader.png</div>
+          <div class="shot"><img src="./assets/shot-reader.webp" alt="Abridgd reader showing a story headline and article text" width="600" height="881" loading="lazy"></div>
           <figcaption><b>Reader.</b> One word at a time, at your pace — or the whole article, plainly.</figcaption>
         </figure>
         <figure>
-          <div class="shot">assets/shot-saved.png</div>
-          <figcaption><b>Saved.</b> Keep what matters. Find it later.</figcaption>
+          <div class="shot"><img src="./assets/shot-icon.webp" alt="Abridgd app icon picker with Slate, Teal, Berry and Paper options" width="600" height="881" loading="lazy"></div>
+          <figcaption><b>Your icon.</b> Slate, teal, berry or paper, on Android.</figcaption>
         </figure>
       </div>
     </div>
@@ -270,9 +266,9 @@
         <p class="section-note">Abridgd is not on Google Play yet, so the Android build is a file you install directly.</p>
       </div>
       <ul class="features" style="columns:1">
-        <li><b>Download the APK</b> from the latest release on GitHub, on the phone itself.</li>
+        <li><b>Download the APK</b> from the beta 2 release on GitHub, on the phone itself. Each release lists a checksum you can verify.</li>
         <li><b>Open it.</b> Android will ask whether to allow installing apps from your browser — this is the standard prompt for anything not from the Play Store.</li>
-        <li><b>Allow it, then install.</b> Updates mean downloading the newer APK the same way.</li>
+        <li><b>Allow it, then install.</b> Updates mean downloading the newer APK the same way. This beta is signed with a test key, so a later build may need an uninstall first. Export your profile from Profile, then Account and backup, before you do.</li>
       </ul>
       <p class="section-note" style="margin-top:22px">Requires Android 7.0 or newer. Play Store release is in progress.</p>
     </div>
